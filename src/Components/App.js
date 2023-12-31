@@ -1,6 +1,5 @@
 import { Component } from "react";
-import Wheel from "./Wheel";
-import Display from "./Display";
+import Case from "./Case";
 import song1 from "../static/songs/Post Malone - White Iverson.mp3";
 import song2 from "../static/songs/John Denver - Country Roads.mp3";
 import song3 from "../static/songs/Sigrid - High Five.mp3";
@@ -226,11 +225,142 @@ class App extends Component {
       notifyText: "Wheel colour changed",
     });
   };
+
+  changeMenuBackward = () => {
+    const navigationStack = this.state.navigationStack.slice();
+    if (this.state.currentMenu == -2) {
+      return;
+    } else {
+      const prevId = navigationStack.pop();
+      this.setState({
+        currentMenu: prevId,
+        navigationStack: navigationStack,
+        activeMenu: 0,
+      });
+      return;
+    }
+  };
+
+  changePlayingSongFromMusicMenu = (id, navigationStack) => {
+    const songUrl = this.state.musicItems[id];
+    const songImageUrl = this.state.songImageItems[id];
+    this.state.audio.pause();
+    this.setState(
+      {
+        currentMenu: 7,
+        songUrl: songUrl,
+        navigationStack: navigationStack,
+        activeMenu: 0,
+        playing: true,
+        songIndex: id,
+        songImageUrl: songImageUrl,
+        audio: new Audio(songUrl),
+      },
+      () => {
+        this.state.audio.play();
+      }
+    );
+    return;
+  };
+
+  changeMenuForward = (id, fromMenu) => {
+    const navigationStack = this.state.navigationStack.slice();
+    if (![-2, -1, 0, 1, 3, 4, 7, 8, 9, 10].includes(fromMenu)) {
+      return;
+    }
+    switch (fromMenu) {
+      case -1:
+        navigationStack.push(this.state.currentMenu);
+        this.setState({
+          currentMenu: id,
+          navigationStack: navigationStack,
+          activeMenu: 0,
+        });
+        break;
+      case -2:
+        navigationStack.push(this.state.currentMenu);
+        this.setState({
+          currentMenu: id,
+          navigationStack: navigationStack,
+          activeMenu: 0,
+        });
+        break;
+      case 0:
+      case 7:
+        this.togglePlayPause();
+        return;
+      case 8:
+        this.setTheme(id);
+        return;
+      case 9:
+        this.setWheelColor(id);
+        return;
+      case 10:
+        this.setWallpaper(id);
+        return;
+      case 4:
+        navigationStack.push(this.state.currentMenu);
+        this.changePlayingSongFromMusicMenu(id, navigationStack, fromMenu);
+        return;
+    }
+    const currentMenuId = this.state.menuMapping[fromMenu][id];
+    this.setState({
+      currentMenu: currentMenuId,
+      navigationStack: navigationStack,
+      activeMenu: 0,
+    });
+  };
+
+  setNoty = () => {
+    this.setState({ noty: false });
+    return;
+  };
   render() {
+    const {
+      activeItems,
+      menuItems,
+      musicItems,
+      wallPaperItems,
+      songNameItems,
+      songIndex,
+      currentMenu,
+      songUrl,
+      playing,
+      theme,
+      audio,
+      songImageUrl,
+      wheelColor,
+      wallpaper,
+      noty,
+      notifyText,
+    } = this.state;
     return (
       <>
-        <Display />
-        <Wheel />
+        <Case
+          songIndex={songIndex}
+          activeItems={activeItems}
+          menuItems={menuItems}
+          musicItems={musicItems}
+          songNameItems={songNameItems}
+          currentMenuId={currentMenu}
+          playing={playing}
+          theme={theme}
+          audio={audio}
+          songUrl={songUrl}
+          songImageUrl={songImageUrl}
+          wheelColor={wheelColor}
+          wallpaper={wallpaper}
+          wallPaperItems={wallPaperItems}
+          noty={noty}
+          notifyText={notifyText}
+          changeMenuBackward={this.changeMenuBackward}
+          changeMenuForward={this.changeMenuForward}
+          updateActiveMenu={this.updateActiveMenu}
+          togglePlayPause={this.togglePlayPause}
+          seekForwardSong={this.seekForwardSong}
+          seekReverseSong={this.seekReverseSong}
+          setNoty={this.setNoty}
+        />
       </>
     );
   }
