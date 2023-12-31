@@ -30,7 +30,7 @@ class App extends Component {
         songImage4,
         songImage5,
       ],
-      wallPaperItems: [wallpaper1, wallpaper2, wallpaper3],
+      wallpaperItems: [wallpaper1, wallpaper2, wallpaper3],
       songNameItems: [
         "Post Malone - White Iverson",
         "John Denver - Country Roads",
@@ -320,7 +320,7 @@ class App extends Component {
       activeItems,
       menuItems,
       musicItems,
-      wallPaperItems,
+      wallpaperItems,
       songNameItems,
       songIndex,
       currentMenu,
@@ -342,7 +342,7 @@ class App extends Component {
           menuItems={menuItems}
           musicItems={musicItems}
           songNameItems={songNameItems}
-          currentMenuId={currentMenu}
+          currentMenu={currentMenu}
           playing={playing}
           theme={theme}
           audio={audio}
@@ -350,7 +350,7 @@ class App extends Component {
           songImageUrl={songImageUrl}
           wheelColor={wheelColor}
           wallpaper={wallpaper}
-          wallPaperItems={wallPaperItems}
+          wallpaperItems={wallpaperItems}
           noty={noty}
           notifyText={notifyText}
           changeMenuBackward={this.changeMenuBackward}

@@ -5,6 +5,23 @@ import "../css/Display.css";
 
 class Display extends Component {
   render() {
+    const {
+      songIndex,
+      playing,
+      activeItems,
+      musicItems,
+      menuItems,
+      currentMenu,
+      songNameItems,
+      audio,
+      songUrl,
+      songImageUrl,
+      wallpaper,
+      wallpaperItems,
+      noty,
+      notifyText,
+      setNoty,
+    } = this.props;
     return (
       <>
         <div className="display">
