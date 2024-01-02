@@ -41,7 +41,7 @@ class App extends Component {
       songIndex: 0, //current song
       lengthMenuKey: { "-1": 3, 1: 2, 4: 4, 8: 4, 3: 2, 9: 3, 10: 2 },
       menuMapping: { "-1": [0, 1, 2, 3], 1: [4, 5, 6], 3: [8, 9, 10] }, //which menu can be rendered by clicking the menu
-      currentMenu: -2, //Lock screen
+      currentMenu: 0, //Lock screen
       navigationStack: [],
       songUrl: song1,
       playing: false,
