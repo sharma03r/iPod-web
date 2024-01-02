@@ -1,62 +1,73 @@
-import { Component } from "react";
-import "../css/Playing.css";
+import React from "react";
+import "../css/Navbar.css";
+import BatImg from "../static/battery.png";
 
-class Playing extends Component {
+// Renders navbar
+class Navbar extends React.Component {
   constructor() {
     super();
     this.state = {
-      currentTime: 0,
+      time: this.getCurrentTime(),
     };
-    this.intervalId = "";
+    this.stateId = "";
   }
-  componentDidMount() {
-    const { audio } = this.props;
-    this.setState({
-      currentTime: audio.currentTime,
-    });
-    this.intervalId = setInterval(() => {
-      this.setState({
-        currentTime: audio.currentTime,
-      });
-    }, 100);
-  }
-  componentWillUnmount() {
-    clearInterval(this.intervalId);
-  }
-  render() {
-    const { songImageUrl, audio, songUrl, playing, songIndex, songNameItems } =
-      this.props;
-    var currentTimeRender =
-      Math.floor(this.state.currentTime / 60) +
-      ":" +
-      Math.floor(this.state.currentTime % 60);
 
-    var durationRender =
-      Math.floor(audio.duration / 60) + ":" + Math.floor(audio.duration % 60);
-    const percentageRender = {
-      width: (this.state.currentTime / audio.duration) * 100 + "%",
-    };
-    if (durationRender === "NaN:NaN") durationRender = "0:00";
+  // if there is no notification then iPod logo, time and battery icon
+  // If there is a notification show it for 1 second and clear it
+  componentDidMount() {
+    const { noty } = this.props;
+    if (noty === true) {
+      return;
+    }
+    // set an interval of 60 seconds to update time
+    this.stateId = setInterval(() => {
+      this.setState({ time: this.getCurrentTime() });
+    }, 60000);
+  }
+
+  componentDidUpdate() {
+    const { setNoty, noty } = this.props;
+    if (noty === true) {
+      setTimeout(function () {
+        setNoty();
+      }, 1000);
+    }
+  }
+
+  // Clear the update time interval
+  componentWillUnmount() {
+    const { noty } = this.props;
+    if (noty !== true) clearInterval(this.stateId);
+  }
+
+  // fir getting current time in string
+  getCurrentTime() {
+    const today = new Date();
+    var time = today.getHours() + ":" + today.getMinutes();
+    if (today.getMinutes() < 10) {
+      time = today.getHours() + ":0" + today.getMinutes();
+    }
+    return time;
+  }
+
+  // Render navbar to show either ipod logo, time or Notification
+  render() {
+    const { time } = this.state;
+    const { playing, noty, notifyText } = this.props;
     return (
-      <div className="song-playing-container">
-        <div className="song-details">
-          <img src={songImageUrl} alt="song image" />
-          <div>
-            <h6>
-              {songNameItems}
-              {songIndex}
-            </h6>
-            {playing && <h4 className="play-pause-nav">Playing</h4>}
-            {!playing && <h4 className="play-pause-nav">Paused</h4>}
+      <div className="bar">
+        {<h5 className="heading">iPod</h5>}
+        {noty === true && <h5 className="notification">{notifyText}</h5>}
+        {noty === false && <h3 className="time">{time}</h3>}
+        {
+          <div className="right-container-nav">
+            {/* {playing ? <h5 className="play-pause-nav"><i className="fas fa-play"></i></h5> : <h5 className="play-pause-nav"><i className="fas fa-pause"></i> </h5>} */}
+            <img className="battery" src={BatImg} alt="Battery" />
           </div>
-        </div>
-        <div className="status">
-          {currentTimeRender}
-          <div style={percentageRender} id="progress-bar"></div>
-          {durationRender}
-        </div>
+        }
       </div>
     );
   }
 }
-export default Playing;
+
+export default Navbar;

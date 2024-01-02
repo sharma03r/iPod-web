@@ -1,21 +1,22 @@
-import { Component } from "react";
-import "../css/Theme.css";
+import React from "react";
+import "../css/Themes.css";
 
-class WheelColor extends Component {
+// Render wheel color change menu
+class WheelColor extends React.Component {
   render() {
-    const { activeItems } = this.props;
+    const { active } = this.props;
     return (
-      <div className="wheel-color">
-        <h2>Select Wheel Color</h2>
+      <div className="music">
+        <h2>Wheel Color Select</h2>
         <ul>
           {["Black", "White", "Brown"].map((element, index) => {
-            return activeItems === index ? (
+            return active === index ? (
               <li key={index} className="active theme-li">
-                &nbsp; {element}
+                {element}
               </li>
             ) : (
-              <li key={index} className="theme-li">
-                &nbsp; {element}
+              <li className="theme-li" key={index}>
+                {element}{" "}
               </li>
             );
           })}
@@ -24,4 +25,5 @@ class WheelColor extends Component {
     );
   }
 }
+
 export default WheelColor;

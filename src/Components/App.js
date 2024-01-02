@@ -1,78 +1,85 @@
-import { Component } from "react";
-import Case from "./Case";
+import React from "react";
+
+// import css file
+import "../css/App.css";
+// Import iPod body file
+import Case from "./Case.js";
+import KnowMore from "./KnowMore.js";
+// Import songs
 import song1 from "../static/songs/Post Malone - White Iverson.mp3";
 import song2 from "../static/songs/John Denver - Country Roads.mp3";
 import song3 from "../static/songs/Sigrid - High Five.mp3";
-import song4 from "../static/songs/Rick Astley - Never Gonna Give You Up.mp3";
-import song5 from "../static/songs/Khalid - Young Dumb Broke.mp3";
+import song4 from "../static/songs/Khalid - Young Dumb Broke.mp3";
+import song5 from "../static/songs/Rick Astley - Never Gonna Give You Up.mp3";
 
-import songImage1 from "../static/Post Malone - White Iverson.png";
-import songImage2 from "../static/John Denver - Country Roads.jpg";
-import songImage3 from "../static/Sigrid - High Five.png";
-import songImage4 from "../static/Never Gonna Give You Up.png";
-import songImage5 from "../static/Khalid - Young Dumb Broke.jpg";
+// Import song cover images
+import song1Img from "../static/Post Malone - White Iverson.png";
+import song2Img from "../static/John Denver - Country Roads.jpg";
+import song3Img from "../static/Sigrid - High Five.png";
+import song4Img from "../static/Khalid - Young Dumb Broke.jpg";
+import song5Img from "../static/Never Gonna Give You Up.png";
 
-import wallpaper1 from "../static/wallpaper1.jpg";
-import wallpaper2 from "../static/wallpaper2.jpg";
-import wallpaper3 from "../static/wallpaper3.jpg";
+// Import wallpapers
+import Wallpaper1 from "../static/wallpaper1.jpg";
+import Wallpaper2 from "../static/wallpaper2.jpg";
+import Wallpaper3 from "../static/wallpaper3.jpg";
 
-class App extends Component {
+class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      activeItems: 0,
-      menuItems: ["Now Playing", "Music", "Games", "Settings"],
-      musicItems: [song1, song2, song3, song4, song5],
-      songImageItems: [
-        songImage1,
-        songImage2,
-        songImage3,
-        songImage4,
-        songImage5,
-      ],
-      wallpaperItems: [wallpaper1, wallpaper2, wallpaper3],
-      songNameItems: [
+      active: 0, //Active list item
+      menuItems: ["Now Playing", "Music", "Games", "Settings"], //menu Items
+      musicItems: ["All Songs", "Artist", "Albums"], //Items in music
+      songItemsUrl: [song1, song2, song3, song4, song5], //songs list
+      songImgItemsUrl: [song1Img, song2Img, song3Img, song4Img, song5Img], //song images list
+      wallpaperItems: [Wallpaper1, Wallpaper2, Wallpaper3], //wallpapers
+      songItems: [
         "Post Malone - White Iverson",
         "John Denver - Country Roads",
-        "Sigrid - High Five",
-        "Rick Astley - Never Gonna Give You Up",
+        "Sigrid Raabe - High Five",
         "Khalid - Young Dumb Broke",
-      ],
+        "Rick Astley - Never Gonna Give You Up",
+      ], //song names
       songIndex: 0, //current song
-      lengthMenuKey: { "-1": 3, 1: 2, 4: 4, 8: 4, 3: 2, 9: 3, 10: 2 },
-      menuMapping: { "-1": [0, 1, 2, 3], 1: [4, 5, 6], 3: [8, 9, 10] }, //which menu can be rendered by clicking the menu
-      currentMenu: 0, //Lock screen
-      navigationStack: [],
-      songUrl: song1,
-      playing: false,
-      theme: "rgb(210,210,210)",
-      audio: new Audio(song1),
-      songImageUrl: songImage1,
-      wheelColor: "white",
-      wallpaper: 0,
-      noty: false,
-      notifyText: "Wallpaper changed",
+      lengthMenuKey: { "-1": 3, 1: 2, 4: 4, 8: 4, 3: 2, 9: 3, 10: 2 }, //length of a particular menu
+      menuMapping: { "-1": [0, 1, 2, 3], 1: [4, 5, 6], 3: [8, 9, 10] }, //which menu can be rendered by key menu
+      currentMenu: -2, //current menu which is lockscreen initially
+      navigationStack: [], //Used for navigation forward and backward
+      songUrl: song1, //current song url
+      playing: false, //playing or not
+      theme: "rgb(210, 210, 210)", //current body theme
+      audio: new Audio(song1), //current audio file
+      songImgUrl: song1Img, //current song img for now playing
+      wheelColor: "white", //current wheel color
+      wallpaper: 0, //current wallpaper
+      noty: false, // has to show notification or not
+      notifyText: "Wallpaper Changed", //notification text
     };
   }
-  //function to seek forward the song
-  seekForwardSong = (e) => {
-    if (this.state.currentMenu === -2 || !this.state.playing) {
+
+  // FUNCTION FOR : ON LONG PRESS OF FORWARD BUTTON TRACKS ARE SEEKED FORWARD
+  seekSongForward = (e) => {
+    if (this.state.currentMenu === -2) {
+      return;
+    }
+    if (this.state.playing === false) {
       return;
     }
     if (e.detail.interval < 250) {
       this.state.audio.pause();
       let songIndex = this.state.songIndex;
-      if (songIndex === this.state.songImageUrl.length - 1) {
+      if (songIndex === this.state.songItemsUrl.length - 1) {
         songIndex = 0;
       } else {
         songIndex++;
       }
-      const songImageUrl = this.state.songImageItems[songIndex];
-      const songUrl = this.state.musicItems[songIndex];
+      const songUrl = this.state.songItemsUrl[songIndex];
+      const songImgUrl = this.state.songImgItemsUrl[songIndex];
       this.setState(
         {
           songIndex: songIndex,
-          songImageUrl: songImageUrl,
+          songImgUrl: songImgUrl,
           songUrl: songUrl,
           audio: new Audio(songUrl),
         },
@@ -89,24 +96,29 @@ class App extends Component {
     }
   };
 
-  seekReverseSong = (e) => {
-    if (this.state.currentMenu === -2 || !this.state.playing) {
+  // FUNCTION FOR : ON LONG PRESS OF FORWARD BUTTON TRACKS ARE SEEKED BACKWARD
+  seekSongReverse = (e) => {
+    if (this.state.currentMenu === -2) {
       return;
     }
+    if (this.state.playing === false) {
+      return;
+    }
+    console.log(e.detail.interval);
     if (e.detail.interval < 250) {
       this.state.audio.pause();
       let songIndex = this.state.songIndex;
       if (songIndex === 0) {
-        songIndex = this.state.musicItems.length - 1;
+        songIndex = this.state.songItemsUrl.length - 1;
       } else {
         songIndex--;
       }
-      const songImageUrl = this.state.songImageItems[songIndex];
-      const songUrl = this.state.musicItems[songIndex];
+      const songUrl = this.state.songItemsUrl[songIndex];
+      const songImgUrl = this.state.songImgItemsUrl[songIndex];
       this.setState(
         {
           songIndex: songIndex,
-          songImageUrl: songImageUrl,
+          songImgUrl: songImgUrl,
           songUrl: songUrl,
           audio: new Audio(songUrl),
         },
@@ -123,77 +135,92 @@ class App extends Component {
     }
   };
 
-  //toggle song play and pause
+  // FUNCTION FOR : TOGGLE SONG PLAY AND PAUSE
   togglePlayPause = () => {
     if (this.state.currentMenu === -2) {
       return;
     }
-    if (this.state.playing == true) {
+    if (this.state.playing === true) {
+      this.setState({ playing: false });
       this.state.audio.pause();
-      this.setState({
-        playing: false,
-      });
     } else {
-      this.state.audio.play();
       this.setState({ playing: true });
+      this.state.audio.play();
     }
   };
 
-  //function to update active menu when the wheel is scrolled
+  // FUNCTION FOR : UPDATE ACTIVE MENU WHILE ROTATING ON THE TRACK-WHEEL
   updateActiveMenu = (direction, menu) => {
-    if (![-1, 1, 4, 8, 9, 10].includes(menu)) {
+    if (
+      menu !== -1 &&
+      menu !== 1 &&
+      menu !== 4 &&
+      menu !== 8 &&
+      menu !== 3 &&
+      menu !== 9 &&
+      menu !== 10
+    ) {
       return;
     }
     let min = 0;
     let max = 0;
+
     max = this.state.lengthMenuKey[menu];
-    if (direction == 1) {
-      if (this.state.activeMenu >= max) {
-        this.setState({
-          activeMenu: min,
-        });
+
+    if (direction === 1) {
+      if (this.state.active >= max) {
+        this.setState({ active: min });
       } else {
-        this.setState({
-          activeMenu: this.state.activeMenu + 1,
-        });
+        this.setState({ active: this.state.active + 1 });
       }
     } else {
-      if (this.state.activeMenu <= min) {
-        this.setState({
-          activeMenu: max,
-        });
+      if (this.state.active <= min) {
+        this.setState({ active: max });
       } else {
-        this.setState({
-          activeMenu: this.state.activeMenu - 1,
-        });
+        this.setState({ active: this.state.active - 1 });
       }
     }
   };
 
+  // FUNCTION FOR : CHANGE THE THEME OF iPod BODY
   setTheme = (id) => {
     let theme = "";
-    switch (id) {
-      case 0:
-        theme = "#f0f0f0";
-        break;
-      case 1:
-        theme = "#555d50";
-        break;
-      case 2:
-        theme = "#d1cdda";
-        break;
-      case 3:
-        theme = "#c4aead";
-        break;
+    if (id === 0) {
+      theme = "#f0f0f0";
+    } else if (id === 1) {
+      theme = "#555d50"; //black
+    } else if (id === 2) {
+      theme = "#ffcc00";
+    } else if (id === 3) {
+      theme = "#D1CDDA";
+    } else if (id === 4) {
+      theme = "#c4aead";
+    }
+    this.setState({ theme: theme, noty: true, notifyText: "Theme Changed" }); //Notification
+    return;
+  };
+
+  // FUNCTION FOR : CHANGE COLOR OF WHEEL
+  setWheelColor = (id) => {
+    let wheelColor = "";
+    if (id === 0) {
+      wheelColor = "#212121";
+    } else if (id === 1) {
+      wheelColor = "white";
+    } else if (id === 2) {
+      wheelColor = "#3E2723";
+    } else if (id === 3) {
+      wheelColor = "#3D5AFE";
     }
     this.setState({
-      theme: theme,
+      wheelColor: wheelColor,
       noty: true,
-      notifyText: "Theme Changed",
+      notifyText: "Wheel Color Changed",
     });
     return;
   };
 
+  // FUNCTION FOR : SET WALLPAPER OF iPod Body
   setWallpaper = (id) => {
     this.setState({
       wallpaper: id,
@@ -203,58 +230,21 @@ class App extends Component {
     return;
   };
 
-  setWheelColor = (id) => {
-    let wheelColor = "";
-    switch (id) {
-      case 0:
-        wheelColor = "#212121";
-        break;
-      case 1:
-        wheelColor = "#white";
-        break;
-      case 2:
-        wheelColor = "#3e2723";
-        break;
-      case 3:
-        wheelColor = "#3d5afe";
-        break;
-    }
-    this.setState({
-      wheelColor: wheelColor,
-      noty: true,
-      notifyText: "Wheel colour changed",
-    });
-  };
-
-  changeMenuBackward = () => {
-    const navigationStack = this.state.navigationStack.slice();
-    if (this.state.currentMenu == -2) {
-      return;
-    } else {
-      const prevId = navigationStack.pop();
-      this.setState({
-        currentMenu: prevId,
-        navigationStack: navigationStack,
-        activeMenu: 0,
-      });
-      return;
-    }
-  };
-
-  changePlayingSongFromMusicMenu = (id, navigationStack) => {
-    const songUrl = this.state.musicItems[id];
-    const songImageUrl = this.state.songImageItems[id];
+  // FUNCTION FOR : CHANGE PLAYING MUSIC
+  chagePlayingSongFromMusicMenu = (id, navigationStack) => {
+    const songUrl = this.state.songItemsUrl[id];
+    const songImgUrl = this.state.songImgItemsUrl[id];
     this.state.audio.pause();
     this.setState(
       {
         currentMenu: 7,
         songUrl: songUrl,
         navigationStack: navigationStack,
-        activeMenu: 0,
+        active: 0,
         playing: true,
         songIndex: id,
-        songImageUrl: songImageUrl,
         audio: new Audio(songUrl),
+        songImgUrl: songImgUrl,
       },
       () => {
         this.state.audio.play();
@@ -263,105 +253,152 @@ class App extends Component {
     return;
   };
 
-  changeMenuForward = (id, fromMenu) => {
+  // FUNCTION FOR : CHANGE MENU BACKWARDS on PRESS OF CENTER BUTTON
+  changeMenuBackward = () => {
     const navigationStack = this.state.navigationStack.slice();
-    if (![-2, -1, 0, 1, 3, 4, 7, 8, 9, 10].includes(fromMenu)) {
+    if (this.state.currentMenu === -2) {
+      return;
+    } else {
+      const prevId = navigationStack.pop();
+      console.log("prevId" + prevId);
+      this.setState({
+        currentMenu: prevId,
+        navigationStack: navigationStack,
+        active: 0,
+      });
       return;
     }
-    switch (fromMenu) {
-      case -1:
-        navigationStack.push(this.state.currentMenu);
-        this.setState({
-          currentMenu: id,
-          navigationStack: navigationStack,
-          activeMenu: 0,
-        });
-        break;
-      case -2:
-        navigationStack.push(this.state.currentMenu);
-        this.setState({
-          currentMenu: id,
-          navigationStack: navigationStack,
-          activeMenu: 0,
-        });
-        break;
-      case 0:
-      case 7:
-        this.togglePlayPause();
-        return;
-      case 8:
-        this.setTheme(id);
-        return;
-      case 9:
-        this.setWheelColor(id);
-        return;
-      case 10:
-        this.setWallpaper(id);
-        return;
-      case 4:
-        navigationStack.push(this.state.currentMenu);
-        this.changePlayingSongFromMusicMenu(id, navigationStack, fromMenu);
-        return;
+  };
+
+  // FUNCTION FOR : CHANGE MENU FORWARD on PRESS OF CENTER BUTTON using NAVIGATION STACK
+  changeMenuForward = (id, fromMenu) => {
+    const navigationStack = this.state.navigationStack.slice();
+
+    if (
+      fromMenu !== -2 &&
+      fromMenu !== -1 &&
+      fromMenu !== 1 &&
+      fromMenu !== 4 &&
+      fromMenu !== 3 &&
+      fromMenu !== 8 &&
+      fromMenu !== 9 &&
+      fromMenu !== 0 &&
+      fromMenu !== 7 &&
+      fromMenu !== 10
+    ) {
+      return;
     }
-    const currentMenuId = this.state.menuMapping[fromMenu][id];
+
+    if (fromMenu === -2) {
+      navigationStack.push(this.state.currentMenu);
+      this.setState({
+        currentMenu: -1,
+        navigationStack: navigationStack,
+        active: 0,
+      });
+      return;
+    }
+
+    if (fromMenu === -1) {
+      navigationStack.push(this.state.currentMenu);
+      this.setState({
+        currentMenu: id,
+        navigationStack: navigationStack,
+        active: 0,
+      });
+      return;
+    }
+
+    if (fromMenu === 7 || fromMenu === 0) {
+      this.togglePlayPause();
+      return;
+    }
+
+    if (fromMenu === 8) {
+      this.setTheme(id);
+      return;
+    }
+
+    if (fromMenu === 9) {
+      this.setWheelColor(id);
+      return;
+    }
+
+    if (fromMenu === 10) {
+      this.setWallpaper(id);
+      return;
+    }
+
+    navigationStack.push(this.state.currentMenu);
+
+    if (fromMenu === 4) {
+      this.chagePlayingSongFromMusicMenu(id, navigationStack, fromMenu);
+      return;
+    }
+
+    const currentMenuID = this.state.menuMapping[fromMenu][id];
     this.setState({
-      currentMenu: currentMenuId,
+      currentMenu: currentMenuID,
       navigationStack: navigationStack,
-      activeMenu: 0,
+      active: 0,
     });
   };
 
+  // FUNCTION FOR : SET NOTIFICATION AS FALSE AFTER SENDING NOTIFICATION
   setNoty = () => {
     this.setState({ noty: false });
     return;
   };
+
+  // FUNCTION FOR : RENDERING APP
   render() {
     const {
-      activeItems,
+      audio,
+      active,
+      currentMenu,
       menuItems,
       musicItems,
-      wallpaperItems,
-      songNameItems,
-      songIndex,
-      currentMenu,
-      songUrl,
+      songItems,
       playing,
+      songIndex,
       theme,
-      audio,
-      songImageUrl,
+      songUrl,
+      songImgUrl,
       wheelColor,
       wallpaper,
+      wallpaperItems,
       noty,
       notifyText,
     } = this.state;
     return (
-      <>
+      <div className="App">
+        {/* <KnowMore/> */}
         <Case
           songIndex={songIndex}
-          activeItems={activeItems}
+          active={active}
           menuItems={menuItems}
           musicItems={musicItems}
-          songNameItems={songNameItems}
           currentMenu={currentMenu}
+          changeMenuForward={this.changeMenuForward}
+          changeMenuBackward={this.changeMenuBackward}
+          updateActiveMenu={this.updateActiveMenu}
+          togglePlayPause={this.togglePlayPause}
+          songItems={songItems}
           playing={playing}
           theme={theme}
           audio={audio}
           songUrl={songUrl}
-          songImageUrl={songImageUrl}
+          songImgUrl={songImgUrl}
+          seekSongForward={this.seekSongForward}
+          seekSongReverse={this.seekSongReverse}
           wheelColor={wheelColor}
           wallpaper={wallpaper}
           wallpaperItems={wallpaperItems}
           noty={noty}
-          notifyText={notifyText}
-          changeMenuBackward={this.changeMenuBackward}
-          changeMenuForward={this.changeMenuForward}
-          updateActiveMenu={this.updateActiveMenu}
-          togglePlayPause={this.togglePlayPause}
-          seekForwardSong={this.seekForwardSong}
-          seekReverseSong={this.seekReverseSong}
           setNoty={this.setNoty}
+          notifyText={notifyText}
         />
-      </>
+      </div>
     );
   }
 }

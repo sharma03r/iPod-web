@@ -1,22 +1,23 @@
-import { Component } from "react";
-import "../css/Theme.css";
+import React from "react";
+import "../css/Themes.css";
 
-class Themes extends Component {
+// Renders themes menu
+class Themes extends React.Component {
   render() {
-    const { activeItems } = this.props;
+    const { active } = this.props;
     return (
-      <div className="theme">
-        <h2>Select theme</h2>
+      <div className="music">
+        <h2>Theme Select</h2>
         <ul>
           {["Snow White", "Black", "USC Gold", "Space Gray", "Pearl"].map(
             (element, index) => {
-              return activeItems === index ? (
+              return active === index ? (
                 <li key={index} className="active theme-li">
-                  &nbsp; {element}
+                  {element}
                 </li>
               ) : (
-                <li key={index} className="theme-li">
-                  &nbsp; {element}
+                <li className="theme-li" key={index}>
+                  {element}{" "}
                 </li>
               );
             }
@@ -26,4 +27,5 @@ class Themes extends Component {
     );
   }
 }
+
 export default Themes;

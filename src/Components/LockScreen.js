@@ -1,14 +1,19 @@
-import { Component } from "react";
-import "../css/LockScreen.css";
-class LockScreen extends Component {
+import React from "react";
+
+// Renderse lockscreen
+class LockScreen extends React.Component {
   render() {
     return (
-      <>
-        <div className="bottom-div-lock">
-          <h3>Press center button to unlock</h3>
+      <div>
+        <div className="lock-display">
+          <i className="fa fa-lock" aria-hidden="true"></i>
         </div>
-      </>
+        <div className="bottom-div-lock">
+          <h3>Press Centre Button to unlock!</h3>
+        </div>
+      </div>
     );
   }
 }
+
 export default LockScreen;

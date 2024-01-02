@@ -1,15 +1,16 @@
-import { Component } from "react";
+import React from "react";
 
-class Wallpaper extends Component {
+// Renders wallpaper menu
+class Wallpaper extends React.Component {
   render() {
-    const { activeItems } = this.props;
+    const { active } = this.props;
     return (
-      <div className="wallpaper">
+      <div className="music">
         <h2>Wallpaper Select</h2>
         <ul>
           {["Wallpaper 1", "Wallpaper 2", "Wallpaper 3"].map(
             (element, index) => {
-              return activeItems === index ? (
+              return active === index ? (
                 <li key={index} className="active theme-li">
                   {element}
                 </li>
@@ -25,4 +26,5 @@ class Wallpaper extends Component {
     );
   }
 }
+
 export default Wallpaper;

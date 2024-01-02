@@ -1,34 +1,35 @@
-import { Component } from "react";
-import Display from "./Display";
-import Wheel from "./Wheel";
+import React from "react";
 import "../css/Case.css";
+import Wheel from "./Wheel.js";
+import Display from "./Display.js";
 
-class Case extends Component {
+// This component is the outer case of iPod it does nothing special just renders display and wheel component
+class Case extends React.Component {
   render() {
     const {
-      songIndex,
-      activeItems,
+      active,
+      updateActiveMenu,
+      currentMenu,
+      changeMenuBackward,
+      changeMenuForward,
       menuItems,
       musicItems,
-      songNameItems,
-      currentMenu,
+      togglePlayPause,
+      songItems,
       playing,
+      songIndex,
       theme,
       audio,
       songUrl,
-      songImageUrl,
+      songImgUrl,
+      seekSongForward,
+      seekSongReverse,
       wheelColor,
       wallpaper,
       wallpaperItems,
       noty,
-      notifyText,
-      changeMenuBackward,
-      changeMenuForward,
-      updateActiveMenu,
-      togglePlayPause,
-      seekForwardSong,
-      seekReverseSong,
       setNoty,
+      notifyText,
     } = this.props;
     return (
       <div className="case-container">
@@ -36,30 +37,31 @@ class Case extends Component {
           <Display
             songIndex={songIndex}
             playing={playing}
-            activeItems={activeItems}
+            active={active}
             musicItems={musicItems}
             menuItems={menuItems}
             currentMenu={currentMenu}
-            songNameItems={songNameItems}
+            songItems={songItems}
             audio={audio}
             songUrl={songUrl}
-            songImageUrl={songImageUrl}
+            songImgUrl={songImgUrl}
             wallpaper={wallpaper}
             wallpaperItems={wallpaperItems}
             noty={noty}
-            notifyText={notifyText}
             setNoty={setNoty}
+            notifyText={notifyText}
           />
           <Wheel
             theme={theme}
-            activeItems={activeItems}
+            active={active}
             menuItems={menuItems}
             currentMenu={currentMenu}
             changeMenuForward={changeMenuForward}
             changeMenuBackward={changeMenuBackward}
+            updateActiveMenu={updateActiveMenu}
             togglePlayPause={togglePlayPause}
-            seekForwardSong={seekForwardSong}
-            seekReverseSong={seekReverseSong}
+            seekSongForward={seekSongForward}
+            seekSongReverse={seekSongReverse}
             wheelColor={wheelColor}
           />
         </div>
@@ -67,4 +69,5 @@ class Case extends Component {
     );
   }
 }
+
 export default Case;

@@ -1,19 +1,22 @@
-import { Component } from "react";
+import React from "react";
+import "../css/Menu.css";
 import game from "../static/game.jpg";
 import music from "../static/music.jpg";
-import setting from "../static/settings.png";
-import "../css/Menu.css";
+import settings from "../static/settings.png";
 
-class Menu extends Component {
+// Renders main menu
+class Menu extends React.Component {
   render() {
-    const { activeItems, menuItems, songImageUrl } = this.props;
+    const { active, menuItems, songImgUrl } = this.props;
     return (
       <div className="menu-container">
         <div className="menu">
           <ul>
             {menuItems.map((element, index) => {
-              return activeItems === index ? (
-                <li key={index}>&nbsp;{element}</li>
+              return active === index ? (
+                <li key={index} className="active">
+                  &nbsp;{element}
+                </li>
               ) : (
                 <li key={index}>&nbsp;{element}</li>
               );
@@ -21,15 +24,18 @@ class Menu extends Component {
           </ul>
         </div>
         <div className="leaf">
-          {activeItems == 0 && (
-            <img src={songImageUrl} className="leaf-image" />
+          {active === 0 && (
+            <img className="leaf-img" src={songImgUrl} alt=""></img>
           )}
-          {activeItems == 1 && <img src={music} className="leaf-image" />}
-          {activeItems == 2 && <img src={game} className="leaf-image" />}
-          {activeItems == 3 && <img src={setting} className="leaf-image" />}
+          {active === 1 && <img className="leaf-img" src={music} alt=""></img>}
+          {active === 2 && <img className="leaf-img" src={game} alt=""></img>}
+          {active === 3 && (
+            <img className="leaf-img" src={settings} alt=""></img>
+          )}
         </div>
       </div>
     );
   }
 }
+
 export default Menu;
